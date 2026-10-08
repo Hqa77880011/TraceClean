@@ -27,6 +27,7 @@ jobs:
       - name: Check Python syntax and command entry points
         run: |
           python -m compileall -q src
+          python -c "import traceclean.data, traceclean.losses, traceclean.metrics, traceclean.model, traceclean.report, traceclean.train, traceclean.trajectory"
           traceclean --help
           traceclean prepare --help
           traceclean train --help
