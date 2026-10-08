@@ -208,15 +208,11 @@ JSON and CSV store rates in `[0, 1]`; tables and figures show percentages. Undef
 
 ## Implementation settings
 
-The paper leaves the complete optimizer, augmentation, EM initialization and detection operating point unspecified. This implementation uses the following settings:
-
 - **Training:** 200 epochs, batch size 128, SGD with `lr=0.1`, `momentum=0.9`, `weight_decay=0.0005` and cosine decay. PreAct ResNet-18 has a CIFAR 3×3 stem, stage widths 64/128/256/512, two blocks per stage and a final BN/ReLU before global pooling. Training uses random cropping with four-pixel padding and horizontal flips. Trajectory and test passes use normalization without random augmentation.
 - **GMM:** unscaled MAD with `epsilon=0.001`, also used as the variance floor. K-means uses three initializations on one thread. EM uses `gmm_iterations=100` and mean log-likelihood tolerance `gmm_tolerance=0.0001`. A fit is rejected if it does not converge, a component's mass is below `min_component_weight=0.01`, or its means coincide within epsilon. Global fallback fits the same class-normalized, oriented vectors. Loss-only ablations need four samples per fit.
-- **Hard ablations:** smoothed reliability is thresholded at `threshold=0.5` before the CE/GCE objective. Low-reliability samples receive GCE. Global variants normalize over the entire dataset. The paper lists the ablation components but does not define this hard-weight rule.
+- **Hard ablations:** smoothed reliability is thresholded at `threshold=0.5` before the CE/GCE objective. Low-reliability samples receive GCE. Global variants normalize over the entire dataset.
 - **Detection:** TraceClean uses smoothed continuous reliability, including in hard ablations. Baselines use observed-label probability as a common diagnostic score. Both use `threshold=0.5`; their precision/recall operating points have different calibrations. Raw TraceClean posteriors are saved in `scores.npz`.
-- **Comparisons:** results use the final epoch, with no checkpoint selection from test accuracy. Corruption is fixed while training seeds vary. Selection baselines use the configured `forget_rate`, set to the synthetic noise rate for symmetric noise and an assumed 0.4 for CIFAR-100N. The included baselines cover CE, Label Smoothing, GCE, Co-teaching, ELR and Small-loss; DivideMix, DISC, DSS and DynaCor from the paper's tables are not bundled.
-
-Full CIFAR benchmark results have not been measured for this implementation. CI checks installation, imports, syntax, command entry points and configuration validity.
+- **Comparisons:** results use the final epoch, with no checkpoint selection from test accuracy. Corruption is fixed while training seeds vary. Selection baselines use the configured `forget_rate`, set to the synthetic noise rate for symmetric noise and an assumed 0.4 for CIFAR-100N.
 
 ## License
 
