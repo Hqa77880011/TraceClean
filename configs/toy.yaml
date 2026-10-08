@@ -1,0 +1,14 @@
+data: data/toy.npz
+output: runs/toy/full-seed0
+method: traceclean
+variant: full
+seed: 0
+epochs: 4
+batch_size: 40
+width: 8
+lr: 0.01
+warmup: 1
+window: 2
+rho: 0.0
+workers: 0
+device: cpu

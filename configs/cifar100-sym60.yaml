@@ -1,0 +1,16 @@
+data: data/cifar100-sym60.npz
+output: runs/cifar100-sym60/full-seed0
+method: traceclean
+variant: full
+seed: 0
+epochs: 200
+batch_size: 128
+width: 64
+lr: 0.1
+warmup: 10
+window: 5
+alpha: 0.9
+rho: 0.9
+q: 0.7
+gce_lambda: 0.5
+forget_rate: 0.6

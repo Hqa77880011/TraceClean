@@ -1,0 +1,39 @@
+name: Package checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install CPU dependencies and package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -e .
+          python -m pip check
+      - name: Check Python syntax and command entry points
+        run: |
+          python -m compileall -q src
+          traceclean --help
+          traceclean prepare --help
+          traceclean train --help
+          traceclean evaluate --help
+          traceclean sweep --help
+          traceclean plot --help
+          traceclean summarize --help
+      - name: Validate shipped configurations
+        run: |
+          python -c "from pathlib import Path; from traceclean.config import load_config; [load_config(path) for path in Path('configs').glob('*.yaml')]"
